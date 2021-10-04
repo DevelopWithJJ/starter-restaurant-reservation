@@ -16,16 +16,57 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
-function validateDateAndTime(req, res, next) {
+function validateDate(req, res, next) {
   const date = req.body.data.reservation_date;
   const time = req.body.data.reservation_time;
-  if (Date.parse(`${date} ${time}`)) {
-    return next();
+  const reservedDate = new Date(`${date} ${time}`);
+  const current = new Date();
+  //Check if reservation_time and reservation_date is valid
+  if (!Date.parse(`${date} ${time}`)) {
+    return next({
+      status: 400,
+      message: `reservation_date and reservation_time must be valid`,
+    });
   }
-  next({
-    status: 400,
-    message: `reservation_date and reservation_time must be valid`,
-  });
+  //Check if trying to set reservation on a Tuesday
+  if (reservedDate.getDay() === 2) {
+    return next({ status: 400, message: "Restaurant is closed on Tuesdays" });
+  }
+  //Check if setting reservation date before today's date
+  if (Date.parse(`${date} ${time}`) < current) {
+    return next({
+      status: 400,
+      message: "reservation_date and reservation_time must be in the future",
+    });
+  }
+  if (
+    reservedDate.getHours() < 10 ||
+    (reservedDate.getHours() === 10 && reservedDate.getMinutes() < 30)
+  ) {
+    return next({
+      status: 400,
+      message: "Reservation cannot be before 10:30AM",
+    });
+  }
+  if (
+    reservedDate.getHours() > 22 ||
+    (reservedDate.getHours() === 22 && reservedDate.getMinutes() >= 30)
+  ) {
+    return next({
+      status: 400,
+      message: "Reservation cannot be after 10:30PM",
+    });
+  }
+  if (
+    reservedDate.getHours() > 21 ||
+    (reservedDate.getHours() === 21 && reservedDate.getMinutes() > 30)
+  ) {
+    return next({
+      status: 400,
+      message: "Reservation must be made an hour before closing",
+    });
+  }
+  next();
 }
 
 function peopleIsNumber(req, res, next) {
@@ -53,7 +94,7 @@ module.exports = {
   list: asyncErrorBoundary(list),
   create: [
     hasRequiredProperties,
-    validateDateAndTime,
+    validateDate,
     peopleIsNumber,
     asyncErrorBoundary(create),
   ],

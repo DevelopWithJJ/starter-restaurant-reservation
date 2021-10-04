@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../ErrorAlert";
-import { createReservation } from "../../utils/api";
-import { today } from "../../utils/date-time";
+// import { createReservation } from "../../utils/api";
+
 
 function ReservationCreate() {
   const initialState = {
@@ -15,7 +15,7 @@ function ReservationCreate() {
   };
 
   const history = useHistory();
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState(initialState);
 
   function changeHandler({ target: { name, value } }) {
@@ -28,9 +28,7 @@ function ReservationCreate() {
   function submitHandler(evt) {
     evt.preventDefault();
     if (validateDate()) {
-      createReservation(formData).then(() => {
-        history.push(`/dashboard?date=${formData.reservation_date}`);
-      });
+      history.push(`/dashboard?date=${formData.reservation_date}`);
     }
   }
 
@@ -39,31 +37,56 @@ function ReservationCreate() {
   }
 
   function validateDate() {
-    const date = new Date(formData.reservation_date);
+    const reservedDate = new Date(`${formData.reservation_date}T ${formData.reservation_time}:00.000`);
+
+    const current = new Date();
 
     const newErrors = [];
 
-    if (date.getDay() === 2) {
+    if (reservedDate.getDay() === 2) {
       newErrors.push({
         message:
-          "Reservations cannot be made on a Tuesday (restaurant is closed).",
+          "Reservations can't be made on a Tuesday (Restaurant is closed)",
+      });
+    }
+    if (reservedDate < current) {
+      newErrors.push({ message: "You can't make reservations in the past." });
+    }
+
+    else if (
+      reservedDate.getHours() < 10 ||
+      (reservedDate.getHours() === 10 && reservedDate.getMinutes() < 30)
+    ) {
+      newErrors.push({ message: "The restaurant is closed before 10:30AM" });
+    } else if (
+      reservedDate.getHours() > 22 ||
+      (reservedDate.getHours() === 22 && reservedDate.getMinutes() >= 30)
+    ) {
+      newErrors.push({ message: "The restaurant is closed after 10:30PM" });
+    } else if (
+      reservedDate.getHours() > 21 ||
+      (reservedDate.getHours() === 21 && reservedDate.getMinutes() > 30)
+    ) {
+      newErrors.push({
+        message: "Reservation must be made an hour before restaurant closes",
       });
     }
 
-    if (date < today()) {
-      newErrors.push({ message: "Reservations cannot be made in the past." });
-    }
-    setError(newErrors);
-    if (newErrors.length < 0) {
+    setErrors(newErrors);
+    if (newErrors.length > 0) {
       return false;
     }
     return true;
   }
 
+  const dateErrors = () => {
+    return errors.map((error, i) => <ErrorAlert key={i} error={error} />);
+  };
+
   return (
     <main>
       <h1>Create Reservation</h1>
-      <ErrorAlert error={error} />
+      {dateErrors()}
       <form onSubmit={submitHandler} className="reservation-edit">
         <fieldset>
           <div className="form-group">
