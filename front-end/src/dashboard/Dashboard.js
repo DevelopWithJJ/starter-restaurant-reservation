@@ -39,6 +39,13 @@ function Dashboard({ date }) {
       </tr>
     );
   });
+
+  // const TablesList = tables.map((table, index) => {
+  //   return <tr id={table.table_id} key={index}>
+  //     <td>{table.table_id}</td>
+  //      <td></td>
+  //   </tr>;
+  // });
   return (
     <main>
       <h1>Dashboard</h1>

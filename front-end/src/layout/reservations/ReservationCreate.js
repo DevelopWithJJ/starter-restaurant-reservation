@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import ErrorAlert from "../ErrorAlert";
 // import { createReservation } from "../../utils/api";
 
-
 function ReservationCreate() {
   const initialState = {
     first_name: "",
@@ -37,7 +36,9 @@ function ReservationCreate() {
   }
 
   function validateDate() {
-    const reservedDate = new Date(`${formData.reservation_date}T ${formData.reservation_time}:00.000`);
+    const reservedDate = new Date(
+      `${formData.reservation_date}T ${formData.reservation_time}:00.000`
+    );
 
     const current = new Date();
 
@@ -51,9 +52,7 @@ function ReservationCreate() {
     }
     if (reservedDate < current) {
       newErrors.push({ message: "You can't make reservations in the past." });
-    }
-
-    else if (
+    } else if (
       reservedDate.getHours() < 10 ||
       (reservedDate.getHours() === 10 && reservedDate.getMinutes() < 30)
     ) {
