@@ -23,7 +23,7 @@
     "test:drop-database": "node test/drop-database",
     "test:start": "npx cross-env LOG_LEVEL=warn NODE_ENV=test npm run test:start:run",
     "test:start:run": "run-s test:drop-database start ",
-    
+    "deploy:backend": "git subtree push --prefix back-end heroku-backend main"
   },
   "keywords": [],
   "author": "",

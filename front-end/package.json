@@ -38,7 +38,8 @@
     "test:e2e:run": "wait-on http://localhost:5000/reservations?date=2020-01-01 && jest --detectOpenHandles --forceExit --config ./e2e/jest.config.js",
     "test:start:backend": "npm run test:start --prefix ./../back-end",
     "test:start:frontend": "npx cross-env BROWSER=none NODE_ENV=test react-scripts start",
-    "test:unit": "react-scripts test"
+    "test:unit": "react-scripts test",
+    "deploy:frontend": "git subtree push --prefix front-end heroku-frontend main"
   },
   "eslintConfig": {
     "extends": [
