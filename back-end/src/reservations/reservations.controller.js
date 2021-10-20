@@ -16,6 +16,14 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
+function validateData(req, res, next) {
+  if (!req.body.data) {
+    return next({ status: 400, message: "Body must include a data object" });
+  }
+
+  next();
+}
+
 function validateBody(req, res, next) {
   if (typeof req.body.data.people !== "number") {
     return next({ status: 400, message: `people must be a numeber` });
@@ -109,7 +117,7 @@ function validateUpdateBody(req, res, next) {
   ) {
     return next({
       status: 400,
-      message: `status field be ${req.body.data.status}`,
+      message: `status field cannot be ${req.body.data.status}`,
     });
   }
   if (res.locals.reservation.status === "finished") {
@@ -153,11 +161,11 @@ function read(req, res) {
 }
 
 async function update(req, res) {
-  const data = await service.update(
+  await service.update(
     res.locals.reservation.reservation_id,
     req.body.data.status
   );
-  res.json({ data });
+  res.json({ data: { status: req.body.data.status } });
 }
 
 module.exports = {
@@ -177,7 +185,7 @@ module.exports = {
     asyncErrorBoundary(edit),
   ],
   update: [
-    hasRequiredProperties,
+    validateData,
     asyncErrorBoundary(reservationExists),
     validateUpdateBody,
     asyncErrorBoundary(update),

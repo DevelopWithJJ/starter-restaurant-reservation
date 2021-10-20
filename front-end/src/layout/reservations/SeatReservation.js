@@ -1,2 +1,1 @@
-function SeatReseration({ reservations, tables })
-return ();
+function SeatReseration({ reservations, tables }) {}
