@@ -8,7 +8,9 @@ function list(date, mobile_number) {
       .orderBy("reservation_time");
   }
   if (mobile_number) {
-    return knex("reservations").select().where({ mobile_number });
+    return knex("reservations")
+      .select()
+      .where("mobile_number", "like", `${mobile_number}%`);
   }
   return knex("reservations").select();
 }
