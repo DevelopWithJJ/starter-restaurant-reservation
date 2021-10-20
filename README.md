@@ -25,11 +25,17 @@ https://jj-final-capstone-frontend.herokuapp.com/
 > * Create new seating
 
 > "Dashboard" allows user to interact with reservations and tables based on the need
+
 <img width="1440" alt="Screen Shot 2021-10-20 at 1 50 58 PM" src="https://user-images.githubusercontent.com/78047919/138155653-9eed6234-3f27-4ff0-94fa-edc251a49973.png">
+
 > "Search" allows user to search up a reservation by phone number
+
 <img width="1440" alt="Screen Shot 2021-10-20 at 1 51 06 PM" src="https://user-images.githubusercontent.com/78047919/138155658-797f3a7f-d48f-4d74-8a71-5758e3eb5395.png">
+
 > "New Reservation" allows user to create a new reservation
+
 <img width="1440" alt="Screen Shot 2021-10-20 at 1 51 21 PM" src="https://user-images.githubusercontent.com/78047919/138155660-e24e145f-f410-4a87-bde7-e600f94d3392.png">
+
 > "New Table" allows user to create a new table
 <img width="1440" alt="Screen Shot 2021-10-20 at 1 51 32 PM" src="https://user-images.githubusercontent.com/78047919/138155662-246c18c8-3ae7-47c8-9854-61eec3413d33.png">
 
