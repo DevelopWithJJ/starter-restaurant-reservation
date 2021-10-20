@@ -4,8 +4,8 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 //////MIDDLEWARE OPERATIONS//////
 
 /**
- * Make sure data object exists
- */
+* Make sure data object exists
+*/
 async function validateData(req, res, next) {
   if (!req.body.data) {
     return next({ status: 400, message: "Body must include a data object" });
@@ -14,8 +14,8 @@ async function validateData(req, res, next) {
 }
 
 /**
- * Validates the body object to make sure all required information is correct.
- */
+* Validates the body object to make sure all required information is correct.
+*/
 async function validateBody(req, res, next) {
   const requiredFields = [
     "first_name",
@@ -68,8 +68,8 @@ async function validateBody(req, res, next) {
 }
 
 /**
- * Validates the reservation date and time to ensure it fits with the restauraunt's schedule.
- */
+* Validates the reservation date and time to ensure it fits with the restauraunt's schedule.
+*/
 async function validateDate(req, res, next) {
   const reserveDate = new Date(
     `${req.body.data.reservation_date}T${req.body.data.reservation_time}:00.000`
@@ -126,8 +126,8 @@ async function validateDate(req, res, next) {
 }
 
 /**
- * Validates, finds, and stores a reservation based off of its ID.
- */
+* Validates, finds, and stores a reservation based off of its ID.
+*/
 async function validateReservationId(req, res, next) {
   const { reservation_id } = req.params;
   const reservation = await service.read(Number(reservation_id));
@@ -145,8 +145,8 @@ async function validateReservationId(req, res, next) {
 }
 
 /**
- * Validates the body object to make sure all required information is correct for updating a resevation's status.
- */
+* Validates the body object to make sure all required information is correct for updating a resevation's status.
+*/
 async function validateUpdateBody(req, res, next) {
   if (!req.body.data.status) {
     return next({ status: 400, message: "Body must include a 'status' field" });
@@ -185,25 +185,25 @@ async function list(req, res) {
 
   const reservations = await service.list(date, mobile_number);
 
-  const response = reservations.filter(
+  const data = reservations.filter(
     (reservation) => reservation.status !== "finished"
   );
 
-  res.json({ data: response });
+  res.json({ data });
 }
 
 /**
- * Create a reservation
- */
+* Create a reservation
+*/
 async function create(req, res) {
   req.body.data.status = "booked";
-  const response = await service.create(req.body.data);
-  res.status(201).json({ data: response });
+  const data = await service.create(req.body.data);
+  res.status(201).json({ data });
 }
 
 /**
- * Update a reservation's status
- */
+* Update a reservation's status
+*/
 async function update(req, res) {
   await service.update(
     res.locals.reservation.reservation_id,
@@ -214,20 +214,20 @@ async function update(req, res) {
 }
 
 /**
- * Edit data of an existing reservation
- */
+* Edit data of an existing reservation
+*/
 async function edit(req, res) {
-  const response = await service.edit(
+  const data = await service.edit(
     res.locals.reservation.reservation_id,
     req.body.data
   );
 
-  res.status(200).json({ data: response });
+  res.status(200).json({ data });
 }
 
 /**
- * Get a particular reservation
- */
+* Get a particular reservation
+*/
 async function read(req, res) {
   res.status(200).json({ data: res.locals.reservation });
 }

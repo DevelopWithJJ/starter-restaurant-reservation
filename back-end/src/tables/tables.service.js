@@ -1,7 +1,7 @@
 const knex = require("../db/connection");
 
 function list() {
-  return knex("tables").select("*").orderBy("table_name", "asc");
+  return knex("tables").select().orderBy("table_name", "asc");
 }
 
 function create(table) {
@@ -12,11 +12,11 @@ function create(table) {
 }
 
 function read(table_id) {
-  return knex("tables").select("*").where({ table_id }).first();
+  return knex("tables").select().where({ table_id }).first();
 }
 
 function readReservation(reservation_id) {
-  return knex("reservations").select("*").where({ reservation_id }).first();
+  return knex("reservations").select().where({ reservation_id }).first();
 }
 
 function occupy(table_id, reservation_id) {
