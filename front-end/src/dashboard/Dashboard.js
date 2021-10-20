@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import React from "react";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
+import ReservationsList from "./ReservationList";
+import TablesList from "./TablesList";
 
 /**
  * Defines the dashboard page.
@@ -10,35 +11,26 @@ import { previous, today, next } from "../utils/date-time";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
+function Dashboard({
+  date,
+  reservations,
+  tables,
+  reservationsError,
+  tablesError,
+}) {
   const history = useHistory();
-  const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
 
-  useEffect(loadDashboard, [date]);
+  const resList = reservations.map((reservation) => (
+    <ReservationsList
+      key={reservation.reservation_id}
+      reservation={reservation}
+    />
+  ));
 
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
-  }
+  const openTables = tables.map((table) => (
+    <TablesList key={tables.table_id} table={table} />
+  ));
 
-  const ReservationsList = reservations.map((reservation, index) => {
-    return (
-      <tr id={reservation.reservation_id} key={index}>
-        <td>{reservation.reservation_id}</td>
-        <td>{reservation.first_name}</td>
-        <td>{reservation.last_name}</td>
-        <td>{reservation.mobile_number}</td>
-        <td>{reservation.reservation_date}</td>
-        <td>{reservation.reservation_time}</td>
-        <td>{reservation.people}</td>
-      </tr>
-    );
-  });
   return (
     <main>
       <h1>Dashboard</h1>
@@ -81,9 +73,24 @@ function Dashboard({ date }) {
               <th className="border-top-0">Reservation Date</th>
               <th className="border-top-0">Reservation Time</th>
               <th className="border-top-0">People</th>
+              <th classname="border-top-0">Seat Table</th>
             </tr>
           </thead>
-          <tbody>{ReservationsList}</tbody>
+          <tbody>{resList}</tbody>
+        </table>
+      </div>
+      <ErrorAlert error={tablesError} />
+      <div className="table-responsive">
+        <table className="table no-wrap">
+          <thead>
+            <tr>
+              <th className="border-top-0">ID</th>
+              <th className="border-top-0">Table Name</th>
+              <th className="border-top-0">Capacity</th>
+              <th className="border-top-0">Status</th>
+            </tr>
+          </thead>
+          <tbody>{openTables}</tbody>
         </table>
       </div>
     </main>
