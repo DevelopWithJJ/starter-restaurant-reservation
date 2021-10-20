@@ -11,6 +11,7 @@
 ## General Info
 
 ### Live Application
+https://jj-final-capstone-frontend.herokuapp.com/
 
 ### Summary 
 > You have been hired as a full stack developer at _Periodic Tables_, a startup that is creating a reservation system for fine dining restaurants.
