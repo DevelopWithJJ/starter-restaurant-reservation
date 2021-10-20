@@ -1,1 +1,0 @@
-function SeatReseration({ reservations, tables }) {}
