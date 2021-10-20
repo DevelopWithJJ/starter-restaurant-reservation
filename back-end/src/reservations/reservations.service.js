@@ -3,13 +3,13 @@ const knex = require("../db/connection");
 function list(date, mobile_number) {
   if (date) {
     return knex("reservations")
-      .select("*")
+      .select()
       .where({ reservation_date: date })
       .orderBy("reservation_time", "asc");
   }
   if (mobile_number) {
     return knex("reservations")
-      .select("*")
+      .select()
       .where("mobile_number", "like", `${mobile_number}%`);
   }
   return knex("reservations").select("*");
@@ -23,7 +23,7 @@ function create(reservation) {
 }
 
 function read(reservation_id) {
-  return knex("reservations").select("*").where({ reservation_id }).first();
+  return knex("reservations").select().where({ reservation_id }).first();
 }
 
 function update(reservation_id, status) {

@@ -137,9 +137,9 @@ async function validateSeatedTable(req, res, next) {
  * List handler for table resources
  */
 async function list(req, res) {
-  const response = await service.list();
+  const data = await service.list();
 
-  res.json({ data: response });
+  res.json({ data });
 }
 
 /**
@@ -153,9 +153,9 @@ async function create(req, res) {
     req.body.data.status = "free";
   }
 
-  const response = await service.create(req.body.data);
+  const data = await service.create(req.body.data);
 
-  res.status(201).json({ data: response });
+  res.status(201).json({ data });
 }
 
 /**
