@@ -11,4 +11,34 @@ function create(newTable) {
     .then((createdRecords) => createdRecords[0]);
 }
 
-module.exports = { list, create };
+function read(table_id) {
+  return knex("tables").select().where({ table_id }).first();
+}
+
+function update(reservation_id, table_id) {
+  return knex("reservations")
+    .where({ reservation_id })
+    .update({ status: "seated" })
+    .then(() => {
+      return knex("tables")
+        .where({ table_id })
+        .update({ reservation_id })
+        .returning()
+        .then((updatedRecords) => updatedRecords[9]);
+    });
+}
+
+function clearTable(table_id, reservation_id) {
+  return knex("reservations")
+    .where({ reservation_id })
+    .update({ status: "finished" })
+    .returning()
+    .then(() => {
+      return knex("tables")
+        .where({ table_id })
+        .update({ reservation_id })
+        .then(() => read(table_id));
+    });
+}
+
+module.exports = { list, create, read, update, clearTable };
