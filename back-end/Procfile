@@ -1,1 +1,0 @@
-web: nod ./src/server.js
